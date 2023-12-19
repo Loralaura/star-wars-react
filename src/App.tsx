@@ -1,27 +1,34 @@
-import React from "react";
-import logo from "./logo.svg";
+import React, { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import ApiResult from "./components/api_result";
+import axios from "axios";
+
+type ResultProps = {
+  name: string;
+};
 
 function App() {
+  const [response, setResponse] = useState<ResultProps[]>();
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    async function fetchMyAPI() {
+      try {
+        const response = await axios("https://swapi.dev/api/people/");
+        setResponse(response.data.results);
+      } catch (error: any) {
+        setError(error.message);
+      }
+    }
+
+    fetchMyAPI();
+  });
+
   return (
     <div className="App">
       <header className="App-header">
-        {/*         <section className="boilerplate">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </section> */}
-        <ApiResult />
+        <h1>{response?.[0]?.name}</h1>
+        {error && <h1>{error}</h1>}
       </header>
     </div>
   );
