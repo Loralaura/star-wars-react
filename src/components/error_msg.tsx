@@ -1,16 +1,17 @@
 import React from "react";
 
-function getErrorMsg(string: ErrorProps) {
-  return <h1>Example</h1>;
-}
-
-export default getErrorMsg;
-
-export type ErrorProps = {
-  status: string;
+type Props = {
+  status?: number;
 };
 
-/* export const ErrorMsg: React.FC<ErrorProps> = (errorMsg) => {
-  return <>{<h1>{getErrorMsg(status)}</h1>}</>;
+export const ErrorMsg: React.FC<Props> = ({ status }) => {
+  if (status === 500)
+    return (
+      <div data-testid="error">Oops... something went wrong, try again 🤕</div>
+    );
+
+  if (status === 418)
+    return <div data-testid="error">418 I'm a tea pot 🫖, silly</div>;
+
+  return null;
 };
- */

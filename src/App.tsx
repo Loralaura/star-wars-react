@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import ErrorMsg from "./components/error_msg";
+import { ErrorMsg } from "./components/error_msg";
 import axios from "axios";
 
 type ResultProps = {
@@ -8,17 +8,16 @@ type ResultProps = {
 };
 
 function App() {
-  const [response, setResponse] = useState<ResultProps[]>();
-  const [error, setError] = useState<string>();
+  const [response, setResponse] = useState<ResultProps>();
+  const [status, setStatus] = useState<number>();
 
   useEffect(() => {
     async function fetchMyAPI() {
       try {
-        const response = await fetch("https://swapi.dev/api/people/");
-        const data = await response.json();
-        setResponse(data);
+        const response = await axios.get("https://swapi.dev/api/people/");
+        setResponse(response.data.results[0]);
       } catch (error: any) {
-        setError(error.message);
+        setStatus(error.response.status);
       }
     }
 
@@ -26,9 +25,9 @@ function App() {
   });
 
   return (
-    <div className="App">
-      {response && <h1 data-testid="name">{response?.[0]?.name}</h1>}
-      {error && <h1>{error}</h1>}
+    <div>
+      {response && <div data-testid="name">{response?.name}</div>}
+      <ErrorMsg status={status} />
     </div>
   );
 }
