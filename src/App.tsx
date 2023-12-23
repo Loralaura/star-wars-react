@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "./App.css";
-import ApiResult from "./components/api_result";
+import ErrorMsg from "./components/error_msg";
 import axios from "axios";
 
 type ResultProps = {
@@ -14,8 +14,9 @@ function App() {
   useEffect(() => {
     async function fetchMyAPI() {
       try {
-        const response = await axios("https://swapi.dev/api/people/");
-        setResponse(response.data.results);
+        const response = await fetch("https://swapi.dev/api/people/");
+        const data = await response.json();
+        setResponse(data);
       } catch (error: any) {
         setError(error.message);
       }
@@ -26,10 +27,8 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>{response?.[0]?.name}</h1>
-        {error && <h1>{error}</h1>}
-      </header>
+      {response && <h1 data-testid="name">{response?.[0]?.name}</h1>}
+      {error && <h1>{error}</h1>}
     </div>
   );
 }
